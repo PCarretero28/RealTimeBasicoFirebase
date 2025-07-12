@@ -34,4 +34,8 @@ class FirebaseInstance(context: Context) {
             description = "Prueba de descripción"
         )
 
+    fun removeFromDatabase(reference: String) {
+        myRef.child(reference).removeValue()
+    }
+
 }

@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 
-class TodoAdapter(private var todoList: List<Pair<String, Todo>> = emptyList()) :
+class TodoAdapter(
+    private var todoList: List<Pair<String, Todo>> = emptyList(),
+    private val onItemSelected: (String) -> Unit
+) :
     RecyclerView.Adapter<TodoViewHolder>() {
 
     fun setNewList(newList: List<Pair<String, Todo>>) {
@@ -22,9 +25,8 @@ class TodoAdapter(private var todoList: List<Pair<String, Todo>> = emptyList()) 
     override fun getItemCount() = todoList.count()
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bind(todoList[position])
+        holder.bind(todoList[position], onItemSelected)
     }
-
 
 
 }
