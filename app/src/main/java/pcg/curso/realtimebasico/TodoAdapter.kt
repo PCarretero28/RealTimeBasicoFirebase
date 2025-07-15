@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class TodoAdapter(
     private var todoList: List<Pair<String, Todo>> = emptyList(),
-    private val onItemSelected: (String) -> Unit
+    private val onItemSelected: (Actions, String) -> Unit
 ) :
     RecyclerView.Adapter<TodoViewHolder>() {
 
