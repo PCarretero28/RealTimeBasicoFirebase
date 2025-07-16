@@ -1,9 +1,12 @@
 package pcg.curso.realtimebasico
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager.LayoutParams
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
@@ -11,6 +14,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import pcg.curso.realtimebasico.data.FirebaseInstance
 import pcg.curso.realtimebasico.databinding.ActivityMainBinding
+import pcg.curso.realtimebasico.databinding.DialogAddTaskBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         */
 
         todoAdapter = TodoAdapter { action, reference ->
-            when(action){
+            when (action) {
                 Actions.DELETE -> firebaseInstance.removeFromDatabase(reference)
                 Actions.DONE -> firebaseInstance.updateFromDatabase(reference)
             }
@@ -56,10 +60,34 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.btnAddTask -> {
-                firebaseInstance.writeOnFirebase()
+                //firebaseInstance.writeOnFirebase()
+                showDialog()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDialog() {
+        val binding = DialogAddTaskBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+        dialog.setContentView(binding.root)
+
+        dialog.window?.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+
+        binding.btnAddTask.setOnClickListener {
+
+            val title = binding.etTitle.text.toString()
+            val description = binding.etDescription.text.toString()
+
+            if (title.isEmpty() || description.isEmpty()) {
+                Toast.makeText(this, "Rellena los campos.", Toast.LENGTH_SHORT).show()
+            } else {
+                firebaseInstance.writeOnFirebase(title, description)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 
     private fun setUpListeners() {
